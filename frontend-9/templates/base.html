@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ page_title|default:APP_NAME }} · {{ APP_NAME }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body data-api-base-url="{{ BACKEND_API_BASE_URL }}">
+    <div class="video-bg" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="auto">
+            <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Переключить тему">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="app-shell">
+        {% include "includes/header.html" %}
+
+        <main class="app-main">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/crypto/encoding.js' %}" defer></script>
+    <script src="{% static 'js/crypto/password.js' %}" defer></script>
+    <script src="{% static 'js/crypto/rsa.js' %}" defer></script>
+    <script src="{% static 'js/crypto/aes.js' %}" defer></script>
+    <script src="{% static 'js/crypto/storage.js' %}" defer></script>
+    <script src="{% static 'js/crypto/client.js' %}" defer></script>
+    <script src="{% static 'js/api.js' %}" defer></script>
+    <script src="{% static 'js/main.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

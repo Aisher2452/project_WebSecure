@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Чаты · {{ APP_NAME }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/chats.css' %}">
+<link rel="stylesheet" href="{% static 'css/chats-polish.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="messenger-page" data-chats-page>
+    <div class="messenger-shell panel hidden" data-messenger-shell>
+        <aside class="messenger-sidebar">
+            <div class="messenger-sidebar__top">
+                <div>
+                    <span class="eyebrow">Messages</span>
+                    <h1 class="messenger-title">Чаты</h1>
+                    <p class="muted messenger-subtitle">Только активные диалоги.</p>
+                </div>
+
+                <button
+                    class="btn btn--primary btn--sm messenger-sidebar__create"
+                    type="button"
+                    data-open-users-modal-button
+                >
+                    Пользователи
+                </button>
+            </div>
+
+            <section class="sidebar-section sidebar-section--chats">
+                <div class="sidebar-section__head">
+                    <div>
+                        <h2>Список чатов</h2>
+                        <p class="muted">Последнее сообщение видно здесь</p>
+                    </div>
+                    <button
+                        class="btn btn--ghost btn--sm"
+                        type="button"
+                        data-refresh-chats-button
+                    >
+                        Обновить
+                    </button>
+                </div>
+
+                <div class="list-state hidden" data-chats-loading>
+                    <div class="loading-row">
+                        <span class="spinner"></span>
+                        <span>Загружаем чаты...</span>
+                    </div>
+                </div>
+
+                <div class="alert alert--error hidden" data-chats-error></div>
+
+                <div class="list-state hidden" data-chats-empty>
+                    <strong>Пока нет чатов</strong>
+                    <p class="muted">Откройте модальное окно пользователей и начните новый диалог.</p>
+                </div>
+
+                <div class="chat-list" data-chats-list></div>
+            </section>
+        </aside>
+
+        <section class="messenger-content">
+            <div class="messenger-content__inner hidden" data-chat-placeholder>
+                <div class="empty-chat-state">
+                    <span class="empty-chat-state__icon">💬</span>
+                    <h2>Выберите чат</h2>
+                    <p class="muted">
+                        Или откройте список пользователей и создайте новый диалог.
+                    </p>
+                </div>
+            </div>
+
+            <div class="messenger-content__inner hidden" data-chat-loading>
+                <div class="chat-center-state">
+                    <div class="state-card chat-center-state__card">
+                        <div class="loading-row loading-row--centered">
+                            <span class="spinner"></span>
+                            <span>Открываем чат...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="messenger-content__inner hidden" data-chat-view>
+                <div class="chat-room">
+                    <header class="chat-room__header">
+                        <div class="chat-room__person">
+                            <div class="chat-avatar chat-avatar--large" data-selected-chat-avatar>—</div>
+                            <div>
+                                <h2 data-selected-chat-name>—</h2>
+                                <p class="muted" data-selected-chat-email>—</p>
+                            </div>
+                        </div>
+
+                        <div class="chat-room__meta-wrap">
+                            <span class="status-badge status-badge--ws status-badge--ws-disconnected" data-ws-status-badge>
+                                offline
+                            </span>
+                        </div>
+                    </header>
+
+                    <div class="chat-room__subhead">
+                        <div class="chat-room__subitem chat-room__subitem--centered">
+                            <span class="muted">Создан</span>
+                            <strong data-selected-chat-created-at>—</strong>
+                        </div>
+                    </div>
+
+                    <div class="ws-inline-state hidden" data-ws-inline-state></div>
+                    <div class="alert alert--error hidden chat-room__alert" data-chat-error-inline></div>
+
+                    <div class="chat-history" data-chat-history>
+                        <div class="chat-history__state hidden" data-messages-loading>
+                            <div class="state-card chat-history__state-card">
+                                <div class="loading-row">
+                                    <span class="spinner"></span>
+                                    <span>Загружаем историю...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-history__state hidden" data-messages-error>
+                            <div class="state-card state-card--error chat-history__state-card">
+                                <h3>Не удалось загрузить сообщения</h3>
+                                <p class="muted" data-messages-error-text>
+                                    Произошла ошибка при запросе сообщений.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="chat-history__state hidden" data-messages-empty>
+                            <div class="state-card chat-history__state-card">
+                                <h3>Сообщений пока нет</h3>
+                                <p class="muted">Отправьте первое сообщение или файл.</p>
+                            </div>
+                        </div>
+
+                        <div class="messages-list hidden" data-messages-list></div>
+                    </div>
+
+                    <footer class="chat-composer">
+                        <form class="chat-composer__form" data-message-form>
+                            <div class="chat-composer__row">
+                                <button
+                                    class="chat-composer__attach"
+                                    type="button"
+                                    title="Выбрать файл"
+                                    data-pick-file-button
+                                >
+                                    +
+                                </button>
+
+                                <input class="hidden" type="file" data-message-file-input>
+
+                                <div class="chat-composer__file-chip hidden" data-selected-file-box>
+                                    <button
+                                        class="chat-composer__file-remove"
+                                        type="button"
+                                        title="Убрать файл"
+                                        data-clear-file-button
+                                    >
+                                        ×
+                                    </button>
+                                    <span data-selected-file-name>Файл</span>
+                                    <small data-selected-file-meta></small>
+                                </div>
+
+                                <div class="chat-composer__input-wrap">
+                                    <input
+                                        id="message-text"
+                                        name="message"
+                                        type="text"
+                                        placeholder="Введите сообщение"
+                                        autocomplete="off"
+                                        data-message-text
+                                    >
+                                </div>
+
+                                <div class="chat-composer__timer-wrap">
+                                    <select id="message-expiration" data-message-expiration>
+                                        <option value="none">Без таймера</option>
+                                        <option value="1_day">1 день</option>
+                                        <option value="1_week">1 неделя</option>
+                                        <option value="1_month">1 месяц</option>
+                                    </select>
+                                </div>
+
+                                <button
+                                    class="btn btn--primary chat-composer__send"
+                                    type="submit"
+                                    data-send-message-button
+                                    aria-label="Отправить"
+                                    title="Отправить"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="alert alert--error hidden" data-message-form-error></div>
+                        </form>
+                    </footer>
+                </div>
+            </div>
+
+            <div class="messenger-content__inner hidden" data-chat-error>
+                <div class="chat-center-state">
+                    <div class="state-card state-card--error chat-center-state__card">
+                        <h2>Не удалось открыть чат</h2>
+                        <p class="muted" data-chat-error-text>
+                            Произошла ошибка при подготовке выбранного чата.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <article class="panel guest-panel hidden" data-messenger-guest>
+        <div class="panel__head">
+            <span class="eyebrow">Secure messenger</span>
+            <h1>Нужна авторизация</h1>
+            <p class="muted">Войдите в аккаунт, чтобы открыть чаты.</p>
+        </div>
+
+        <div class="actions-row">
+            <a class="btn btn--primary" href="{% url 'accounts:login' %}">Войти</a>
+            <a class="btn btn--ghost" href="{% url 'accounts:register' %}">Регистрация</a>
+        </div>
+    </article>
+
+    <div class="users-modal hidden" data-users-modal>
+        <div class="users-modal__backdrop" data-close-users-modal></div>
+        <div class="users-modal__dialog panel" role="dialog" aria-modal="true" aria-label="Пользователи">
+            <div class="users-modal__head">
+                <div>
+                    <span class="eyebrow">Users</span>
+                    <h2>Новый чат</h2>
+                    <p class="muted">Найдите пользователя и откройте диалог.</p>
+                </div>
+                <button class="users-modal__close" type="button" data-close-users-modal>×</button>
+            </div>
+
+            <div class="users-modal__search">
+                <input
+                    type="search"
+                    placeholder="Поиск по username или email"
+                    data-users-search
+                >
+                <button class="btn btn--ghost btn--sm" type="button" data-refresh-users-button>Обновить</button>
+            </div>
+
+            <div class="list-state hidden" data-users-loading>
+                <div class="loading-row">
+                    <span class="spinner"></span>
+                    <span>Загружаем пользователей...</span>
+                </div>
+            </div>
+
+            <div class="alert alert--error hidden" data-users-error></div>
+
+            <div class="list-state hidden" data-users-empty>
+                <strong>Пользователи не найдены</strong>
+                <p class="muted">Попробуйте другой запрос.</p>
+            </div>
+
+            <div class="users-list" data-users-list></div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/chats-users.js' %}" defer></script>
+<script src="{% static 'js/pages/chats-list.js' %}" defer></script>
+<script src="{% static 'js/pages/chats-direct.js' %}" defer></script>
+<script src="{% static 'js/pages/chats-messages.js' %}" defer></script>
+<script src="{% static 'js/pages/chats-file-helpers.js' %}" defer></script>
+<script src="{% static 'js/pages/chats-decryption.js' %}" defer></script>
+<script src="{% static 'js/pages/chats-realtime.js' %}" defer></script>
+<script src="{% static 'js/pages/chats.js' %}" defer></script>
+{% endblock %}

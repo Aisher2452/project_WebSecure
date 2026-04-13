@@ -1,0 +1,19 @@
+.messenger-shell,
+.users-modal__dialog,
+.chat-history,
+.chat-composer__form,
+.list-card,
+.message-bubble,
+.chat-room__subitem {
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.14);
+}
+
+body.light-mode .messenger-shell,
+body.light-mode .users-modal__dialog,
+body.light-mode .chat-history,
+body.light-mode .chat-composer__form,
+body.light-mode .list-card,
+body.light-mode .message-bubble,
+body.light-mode .chat-room__subitem {
+    box-shadow: 0 16px 36px rgba(35, 55, 86, 0.12);
+}

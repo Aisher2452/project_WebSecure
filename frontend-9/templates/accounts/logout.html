@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="auth-shell">
+    <article class="panel auth-panel auth-panel--compact">
+        <div class="panel__head">
+            <span class="eyebrow">Этап 1</span>
+            <h1>Выход</h1>
+            <p class="muted">
+                Очищаем access token, refresh token и профиль пользователя из localStorage.
+            </p>
+        </div>
+
+        <div class="loading-row">
+            <span class="spinner"></span>
+            <span>Выход из аккаунта...</span>
+        </div>
+    </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/logout.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+<header class="site-header">
+    <div class="container site-header__inner">
+        <a class="brand" href="{% url 'chats:index' %}">
+            <span class="brand__badge">SM</span>
+            <span class="brand__text">
+                <strong>{{ APP_NAME }}</strong>
+                <small>Encrypted direct chats</small>
+            </span>
+        </a>
+
+        <nav class="site-nav">
+            <div class="site-nav__guest" data-nav-guest>
+                <a class="btn btn--ghost btn--sm" href="{% url 'accounts:login' %}">Вход</a>
+                <a class="btn btn--primary btn--sm" href="{% url 'accounts:register' %}">Регистрация</a>
+            </div>
+
+            <div class="site-nav__auth hidden" data-nav-auth>
+                <div class="user-chip">
+                    <span class="user-chip__name" data-nav-username>Пользователь</span>
+                    <span class="user-chip__email" data-nav-useremail></span>
+                </div>
+                <a class="btn btn--ghost btn--sm" href="{% url 'accounts:logout' %}">Выйти</a>
+            </div>
+        </nav>
+    </div>
+</header>

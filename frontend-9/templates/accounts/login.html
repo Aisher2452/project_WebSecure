@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Вход · {{ APP_NAME }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <section class="auth-shell">
+        <article class="panel auth-card auth-card--single">
+            <div class="auth-card__form auth-form-panel">
+                <div class="auth-branding">
+                    <span class="eyebrow">Secure access</span>
+                    <h1 class="auth-card__title">Secure Messenger</h1>
+                </div>
+
+                <div class="alert alert--error hidden" data-form-alert></div>
+
+                <form class="form-stack" data-login-form novalidate>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            placeholder="Введите пароль"
+                            required
+                        >
+                    </div>
+
+                    <button class="btn btn--primary btn--block" type="submit" data-submit-button>
+                        Войти
+                    </button>
+                </form>
+
+                <p class="auth-footer">
+                    Нет аккаунта?
+                    <a href="{% url 'accounts:register' %}">Создать аккаунт</a>
+                </p>
+            </div>
+        </article>
+    </section>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/login.js' %}" defer></script>
+{% endblock %}

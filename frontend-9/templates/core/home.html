@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="dashboard-shell" data-home-page>
+    <article class="panel hero-panel">
+        <div class="panel__head">
+            <span class="eyebrow">Этап 2</span>
+            <h1>Crypto client + Auth</h1>
+            <p class="muted">
+                На этой странице проверяются токены, current user и состояние client-side ключевого материала для E2EE.
+            </p>
+        </div>
+
+        <div class="state-card" data-home-loading>
+            <div class="loading-row">
+                <span class="spinner"></span>
+                <span>Загружаем пользователя и crypto-сессию...</span>
+            </div>
+        </div>
+
+        <div class="state-card hidden" data-home-guest>
+            <h2>Вы еще не авторизованы</h2>
+            <p class="muted">
+                Войдите или зарегистрируйтесь, чтобы получить токены, crypto-профиль и расшифровать private key локально в браузере.
+            </p>
+            <div class="actions-row">
+                <a class="btn btn--primary" href="{% url 'accounts:login' %}">Войти</a>
+                <a class="btn btn--ghost" href="{% url 'accounts:register' %}">Регистрация</a>
+            </div>
+        </div>
+
+        <div class="state-card state-card--error hidden" data-home-error>
+            <h2>Ошибка загрузки current user</h2>
+            <p class="muted" data-home-error-text>
+                Не удалось получить данные пользователя.
+            </p>
+            <div class="actions-row">
+                <a class="btn btn--primary" href="{% url 'accounts:login' %}">Перелогиниться</a>
+            </div>
+        </div>
+
+        <div class="hidden" data-home-user>
+            <div class="grid-two grid-two--stacked">
+                <article class="panel">
+                    <div class="panel__head panel__head--compact">
+                        <h2>Текущий пользователь</h2>
+                    </div>
+
+                    <dl class="info-list">
+                        <div class="info-row">
+                            <dt>ID</dt>
+                            <dd data-user-id>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Username</dt>
+                            <dd data-user-username>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Email</dt>
+                            <dd data-user-email>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Active</dt>
+                            <dd data-user-active>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Public key</dt>
+                            <dd data-user-public-key>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Encrypted private key</dt>
+                            <dd data-user-encrypted-private-key>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Key salt</dt>
+                            <dd data-user-key-salt>—</dd>
+                        </div>
+                    </dl>
+                </article>
+
+                <article class="panel">
+                    <div class="panel__head panel__head--compact">
+                        <h2>Состояние токенов</h2>
+                    </div>
+
+                    <dl class="info-list">
+                        <div class="info-row">
+                            <dt>Access token</dt>
+                            <dd data-access-token-preview>Не найден</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Refresh token</dt>
+                            <dd data-refresh-token-preview>Не найден</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Хранение</dt>
+                            <dd>localStorage</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Auto refresh</dt>
+                            <dd>Включен</dd>
+                        </div>
+                    </dl>
+
+                    <p class="muted token-note">
+                        При ответе 401 frontend обновляет access token через refresh token и повторяет запрос к <code>/auth/me</code>.
+                    </p>
+                </article>
+
+                <article class="panel">
+                    <div class="panel__head panel__head--compact">
+                        <h2>Crypto storage</h2>
+                    </div>
+
+                    <dl class="info-list">
+                        <div class="info-row">
+                            <dt>Web Crypto API</dt>
+                            <dd data-crypto-supported>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Private key unlocked</dt>
+                            <dd data-crypto-unlocked>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Session cache</dt>
+                            <dd data-crypto-session-cache>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Public key</dt>
+                            <dd data-crypto-public-storage>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Encrypted private key</dt>
+                            <dd data-crypto-private-storage>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Salt</dt>
+                            <dd data-crypto-salt-storage>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Session private key</dt>
+                            <dd data-crypto-session-storage>—</dd>
+                        </div>
+                    </dl>
+                </article>
+
+                <article class="panel">
+                    <div class="panel__head panel__head--compact">
+                        <h2>Служебные crypto-данные</h2>
+                    </div>
+
+                    <dl class="info-list">
+                        <div class="info-row">
+                            <dt>KDF</dt>
+                            <dd data-crypto-kdf>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Cipher</dt>
+                            <dd data-crypto-cipher>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Payload version</dt>
+                            <dd data-crypto-payload-version>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Public key preview</dt>
+                            <dd data-crypto-public-key-preview>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Encrypted private key preview</dt>
+                            <dd data-crypto-private-key-preview>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Salt preview</dt>
+                            <dd data-crypto-salt-preview>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Session source</dt>
+                            <dd data-crypto-session-source>—</dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Session cached at</dt>
+                            <dd data-crypto-session-cached-at>—</dd>
+                        </div>
+                    </dl>
+                </article>
+            </div>
+        </div>
+    </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/home.js' %}" defer></script>
+{% endblock %}
