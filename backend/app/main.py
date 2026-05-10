@@ -1,8 +1,10 @@
+import os  
 import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.v1.router import api_router
 from app.core.config import settings
@@ -12,7 +14,6 @@ from app.services.background_tasks import expired_messages_worker
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     task = asyncio.create_task(expired_messages_worker())
-
     try:
         yield
     finally:
@@ -24,6 +25,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
+
+# Создать папку для загрузк если её нет
+uploads_dir = "storage/uploads"
+if not os.path.exists(uploads_dir):
+    os.makedirs(uploads_dir)
+
+# Подключить статическую раздачу файлов
+app.mount("/storage/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 app.add_middleware(
     CORSMiddleware,
